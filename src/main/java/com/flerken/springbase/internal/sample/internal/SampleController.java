@@ -10,6 +10,7 @@ import com.flerken.springbase.internal.enums.Status;
 import com.flerken.springbase.internal.models.Sample;
 import com.flerken.springbase.internal.sample.api.SampleServiceApi;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,14 +40,18 @@ public class SampleController extends BaseCRUDController<SampleDto, Sample> impl
 
     @Override
     public ResponseEntity<ResponseDto<List<SampleDto>>> retrieveBySpecificConditions() {
-        List<SampleDto> dtoList = sampleService.findALlWithAmountGreaterThan(1f);
+        try {
+            List<SampleDto> dtoList = sampleService.findALlWithAmountGreaterThan(1f);
 
-        ResponseDto<List<SampleDto>> responseDto = ResponseDto.<List<SampleDto>>builder()
-                .status(Status.SUCCESS)
-                .message("")
-                .payload(dtoList)
-                .build();
+            ResponseDto<List<SampleDto>> responseDto = ResponseDto.<List<SampleDto>>builder()
+                    .status(Status.SUCCESS)
+                    .message("")
+                    .payload(dtoList)
+                    .build();
 
-        return ResponseEntity.ok(responseDto);
+            return ResponseEntity.ok(responseDto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
