@@ -7,6 +7,7 @@ import com.flerken.springbase.internal.enums.Status;
 import com.flerken.springbase.internal.models.base.BaseEntity;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -35,83 +36,122 @@ public abstract class BaseCRUDController<D extends BaseDto, E extends BaseEntity
 
     @Override
     public ResponseEntity<ResponseDto<D>> retrieve(Long id) {
-        E entity = jpaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No " + entityClass.getSimpleName() + " entry with identifier: " + id));
+        try {
+            E entity = jpaRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("No " + entityClass.getSimpleName() + " entry with identifier: " + id));
 
-        D dto = mapper.toDto(entity);
+            D dto = mapper.toDto(entity);
 
-        ResponseDto<D> responseDto = ResponseDto.<D>builder()
-                .status(Status.SUCCESS)
-                .message("")
-                .payload(dto)
-                .build();
+            ResponseDto<D> responseDto = ResponseDto.<D>builder()
+                    .status(Status.SUCCESS)
+                    .message("")
+                    .payload(dto)
+                    .build();
 
-        return ResponseEntity.ok(responseDto);
+            return ResponseEntity.ok(responseDto);
+        } catch (EntityNotFoundException e) {
+            ResponseDto<D> responseDto = ResponseDto.<D>builder()
+                    .status(Status.ERROR)
+                    .message(e.getMessage())
+                    .build();
+
+            return ResponseEntity.ok(responseDto);
+        } catch (Exception e) {
+            // TODO: Log
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
     public ResponseEntity<ResponseDto<List<D>>> retrieveAll() {
-        List<D> dtoList = jpaRepository.findAll()
-                .stream()
-                .map(mapper::toDto)
-                .toList();
+        try {
+            List<D> dtoList = jpaRepository.findAll()
+                    .stream()
+                    .map(mapper::toDto)
+                    .toList();
 
-        ResponseDto<List<D>> responseDto = ResponseDto.<List<D>>builder()
-                .status(Status.SUCCESS)
-                .message("")
-                .payload(dtoList)
-                .build();
+            ResponseDto<List<D>> responseDto = ResponseDto.<List<D>>builder()
+                    .status(Status.SUCCESS)
+                    .message("")
+                    .payload(dtoList)
+                    .build();
 
-        return ResponseEntity.ok(responseDto);
+            return ResponseEntity.ok(responseDto);
+        } catch (Exception e) {
+            // TODO: Log
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
     public ResponseEntity<ResponseDto<D>> create(D dto) {
-        E entity = mapper.toEntity(dto);
+        try {
+            E entity = mapper.toEntity(dto);
 
-        E savedEntity = jpaRepository.save(entity);
+            E savedEntity = jpaRepository.save(entity);
 
-        D savedDto = mapper.toDto(savedEntity);
+            D savedDto = mapper.toDto(savedEntity);
 
-        ResponseDto<D> responseDto = ResponseDto.<D>builder()
-                .status(Status.SUCCESS)
-                .message("")
-                .payload(savedDto)
-                .build();
+            ResponseDto<D> responseDto = ResponseDto.<D>builder()
+                    .status(Status.SUCCESS)
+                    .message("")
+                    .payload(savedDto)
+                    .build();
 
-        return ResponseEntity.ok(responseDto);
+            return ResponseEntity.ok(responseDto);
+        } catch (Exception e) {
+            // TODO: Log
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
     public ResponseEntity<ResponseDto<D>> edit(Long id, D dto) {
-        E entity = jpaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No " + entityClass.getSimpleName() + " entry with identifier: " + id));
+        try {
+            E entity = jpaRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("No " + entityClass.getSimpleName() + " entry with identifier: " + id));
 
-        editor.edit(entity, dto);
+            editor.edit(entity, dto);
 
-        E savedEntity = jpaRepository.save(entity);
+            E savedEntity = jpaRepository.save(entity);
 
-        D savedDto = mapper.toDto(savedEntity);
+            D savedDto = mapper.toDto(savedEntity);
 
-        ResponseDto<D> responseDto = ResponseDto.<D>builder()
-                .status(Status.SUCCESS)
-                .message("")
-                .payload(savedDto)
-                .build();
+            ResponseDto<D> responseDto = ResponseDto.<D>builder()
+                    .status(Status.SUCCESS)
+                    .message("")
+                    .payload(savedDto)
+                    .build();
 
-        return ResponseEntity.ok(responseDto);
+            return ResponseEntity.ok(responseDto);
+        } catch (EntityNotFoundException e) {
+            ResponseDto<D> responseDto = ResponseDto.<D>builder()
+                    .status(Status.ERROR)
+                    .message(e.getMessage())
+                    .build();
+
+            return ResponseEntity.ok(responseDto);
+        } catch (Exception e) {
+            // TODO: Log
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
     public ResponseEntity<ResponseDto<D>> delete(Long id) {
-        jpaRepository.deleteById(id);
+        try {
+            jpaRepository.deleteById(id);
 
-        ResponseDto<D> responseDto = ResponseDto.<D>builder()
-                .status(Status.SUCCESS)
-                .message("")
-                .payload(null)
-                .build();
+            ResponseDto<D> responseDto = ResponseDto.<D>builder()
+                    .status(Status.SUCCESS)
+                    .message("")
+                    .payload(null)
+                    .build();
 
-        return ResponseEntity.ok(responseDto);
+            return ResponseEntity.ok(responseDto);
+        } catch (Exception e) {
+            // TODO: Log
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
