@@ -6,6 +6,7 @@ import com.flerken.springbase.api.dto.base.BaseDto;
 import com.flerken.springbase.internal.enums.Status;
 import com.flerken.springbase.internal.models.base.BaseEntity;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.List;
  * @param <D> as existing Dto type
  * @param <E> as existing Entity type
  */
+@Slf4j
 public abstract class BaseCRUDController<D extends BaseDto, E extends BaseEntity> implements BaseCRUDControllerApi<D> {
 
     private final JpaRepository<E, Long> jpaRepository;
@@ -57,7 +59,7 @@ public abstract class BaseCRUDController<D extends BaseDto, E extends BaseEntity
 
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
-            // TODO: Log
+            log.error(e.getMessage(), e.getCause());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -78,7 +80,7 @@ public abstract class BaseCRUDController<D extends BaseDto, E extends BaseEntity
 
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
-            // TODO: Log
+            log.error(e.getMessage(), e.getCause());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -100,7 +102,7 @@ public abstract class BaseCRUDController<D extends BaseDto, E extends BaseEntity
 
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
-            // TODO: Log
+            log.error(e.getMessage(), e.getCause());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -132,7 +134,7 @@ public abstract class BaseCRUDController<D extends BaseDto, E extends BaseEntity
 
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
-            // TODO: Log
+            log.error(e.getMessage(), e.getCause());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -150,7 +152,7 @@ public abstract class BaseCRUDController<D extends BaseDto, E extends BaseEntity
 
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
-            // TODO: Log
+            log.error(e.getMessage(), e.getCause());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

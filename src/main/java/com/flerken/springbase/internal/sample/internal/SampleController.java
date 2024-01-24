@@ -9,6 +9,7 @@ import com.flerken.springbase.internal.EntityDtoEditor;
 import com.flerken.springbase.internal.enums.Status;
 import com.flerken.springbase.internal.models.Sample;
 import com.flerken.springbase.internal.sample.api.SampleServiceApi;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import java.util.List;
  * an interface which defines the customs methods. A controller with only the basic CRUD abilities only needs
  * to implement the 'BaseController'.
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/sample")
 public class SampleController extends BaseCRUDController<SampleDto, Sample> implements SampleControllerApi {
@@ -51,6 +53,7 @@ public class SampleController extends BaseCRUDController<SampleDto, Sample> impl
 
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
+            log.error(e.getMessage(), e.getCause());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
