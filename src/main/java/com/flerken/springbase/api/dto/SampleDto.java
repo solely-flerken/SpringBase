@@ -1,7 +1,6 @@
 package com.flerken.springbase.api.dto;
 
 import com.flerken.springbase.api.dto.base.BaseDto;
-import com.flerken.springbase.internal.enums.SampleUnit;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.experimental.SuperBuilder;
