@@ -22,7 +22,7 @@ import java.util.List;
  * @param <E> as existing Entity type
  */
 @Slf4j
-public abstract class BaseCRUDController<D extends BaseDto, E extends BaseEntity> implements BaseCRUDControllerApi<D> {
+public abstract class BaseCRUDController<E extends BaseEntity, D extends BaseDto> implements BaseCRUDControllerApi<D> {
 
     private final JpaRepository<E, Long> jpaRepository;
     private final EntityDtoConverter<E, D> mapper;
