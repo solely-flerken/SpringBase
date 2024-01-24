@@ -23,7 +23,7 @@ public class SampleEditor implements EntityDtoEditor<Sample, SampleDto> {
             try {
                 entity.setUnit(SampleUnit.valueOf(dto.getUnit()));
             } catch (Exception e) {
-                throw new InvalidUnitException();
+                throw new InvalidUnitException("Invalid unit: " + dto.getUnit());
             }
         }
     }
