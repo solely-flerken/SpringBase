@@ -35,5 +35,5 @@ For each of your features:
 To create other functionalities besides CRUD operations while following our structure we start by defining a contract for the controller of the desired feature. We then also implement this contract in our implementation of the `BaseCRUDController`. From there on we follow the basic Spring Boot workflow for creating controllers. We can use the implementation of `EntityDtoConverter` and `EntityDtoEditor` for the custom controller functionality.
 
 ## Future work
-[ ] Export as library
-[ ] Extend functionality
+* [ ] Export as library
+* [ ] Extend functionality
