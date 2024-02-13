@@ -1,6 +1,5 @@
 package com.flerken.springbase.internal;
 
-import com.flerken.springbase.api.controller.base.BaseCRUDControllerApi;
 import com.flerken.springbase.api.dto.ResponseDto;
 import com.flerken.springbase.api.dto.base.BaseDto;
 import com.flerken.springbase.internal.enums.Status;
@@ -22,7 +21,7 @@ import java.util.List;
  * @param <E> as existing Entity type
  */
 @Slf4j
-public abstract class BaseCRUDController<E extends BaseEntity, D extends BaseDto> implements BaseCRUDControllerApi<D> {
+public abstract class BaseCRUDController<E extends BaseEntity, D extends BaseDto> {
 
     private final JpaRepository<E, Long> jpaRepository;
     private final EntityDtoConverter<E, D> mapper;
@@ -36,7 +35,6 @@ public abstract class BaseCRUDController<E extends BaseEntity, D extends BaseDto
         this.entityClass = entityClass;
     }
 
-    @Override
     public ResponseEntity<ResponseDto<D>> retrieve(Long id) {
         try {
             E entity = jpaRepository.findById(id)
@@ -64,7 +62,6 @@ public abstract class BaseCRUDController<E extends BaseEntity, D extends BaseDto
         }
     }
 
-    @Override
     public ResponseEntity<ResponseDto<List<D>>> retrieveAll() {
         try {
             List<D> dtoList = jpaRepository.findAll()
@@ -85,7 +82,6 @@ public abstract class BaseCRUDController<E extends BaseEntity, D extends BaseDto
         }
     }
 
-    @Override
     public ResponseEntity<ResponseDto<D>> create(D dto) {
         try {
             E entity = mapper.toEntity(dto);
@@ -107,7 +103,6 @@ public abstract class BaseCRUDController<E extends BaseEntity, D extends BaseDto
         }
     }
 
-    @Override
     public ResponseEntity<ResponseDto<D>> edit(Long id, D dto) {
         try {
             E entity = jpaRepository.findById(id)
@@ -139,7 +134,6 @@ public abstract class BaseCRUDController<E extends BaseEntity, D extends BaseDto
         }
     }
 
-    @Override
     public ResponseEntity<ResponseDto<D>> delete(Long id) {
         try {
             jpaRepository.deleteById(id);
