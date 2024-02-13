@@ -1,70 +1,39 @@
 # Spring Base - A template for RESTful web services
 
-This project can be used as a starting point for some RESTful web services, which are especially using mutiple entities which all implement simple CRUD operations.
+This project serves as a robust foundation for building RESTful web services, particularly tailored for scenarios involving multiple entities with simple CRUD (Create, Read, Update, Delete) operations. With a modular architecture it enables rapid prototyping and efficient implementation of backend services.
 
-## Usage
-Simply fork this project or download the source code and change the code based on your needs.
-A simple endpoint with complete CRUD functionality can be created in few steps.
-
-Create an endpoint with CRUD functionality only:
-* Create the entity extending BaseEntity
-* Create the dto extending BaseDto
-* Create a Repository for the entity
-* (Optional) Create a package, for good structure
-* Create a class extending BaseCRUDController<entity, dto> with the created dto and entity as the generic types. Annotate the controller with @RestController and @RequestMapping("/api/v1/your_path")
-* Create a class annoted with @Service implementing EntityDtoConverter<entity, dto>
-* Create a class annoted with @Service implementing EntityDtoEditor<entity, dto>
-
-Create an endpoint with CRUD and custom functionality. Do everything mentioned above and the following additional steps.
-* Create an interface in the controller package and define your custom functionalities
-* In the created class which extends BaseCRUDController<dto, entity> implement the just created interface and implement the custom functions.
-
-Create an endpoint without CRUD functionality (from the template, but it still can be implemented manually):
-* Create the entity, optionally extending BaseEntity
-* (Optional) Create the dto, optionally extending BaseDto
-* Create a Repository for the entity
-* (Optional) Create a package, for good structure)
-* (Optional) Create an interface in the controller package and define your custom functionalities
-* Create a class, optionally implementing the interface. Annotate the controller with @RestController and @RequestMapping("/api/v1/your_path")
-* (Optional) Create a class annoted with @Service implementing EntityDtoConverter<entity, dto>
-* (Optional) Create a class annoted with @Service implementing EntityDtoEditor<entity, dto>
+## Table of Contents
+- [Structure](#structure)
+- [Usage](#usage)
+- [Future work](#future-work)
 
 ## Structure
-The project is structured in a specific way.
-* src
-  * api
-    * controller
-      * your_functionality_controller_api
-        
-        Here you define your custom controllers as interfaces.
-    * dto
-      * your_dto
-        
-        Here you define your custom dtos extending `BaseDto`. Annotate accordingly.
-  * internal
-    * model
-      * your_entity
-        
-        Here you define your custom entity extending `BaseEntity`. Annotate accordingly.
-    * your_functionality
-      * api
-        * your_functionality_service_api
-          
-          Here you define the outline of your custom business logic. Don't do that in your custom controllers.
-      * internal
-        * your_functionality_package   
-          * your_functionality_controller
-            
-            Depending if you want to use basic CRUD functionality you extend this class with `BaseCRUDController<your_entity, your_dto>` or implement a custom interfaces. Should be annotated with `@RestController` and `@RequestMapping("/api/v1/your_path")`.
-          * your_functionality_editor
-            
-            This class implements `EntityDtoEditor<your_entity, your_dto>` and is used to define specific behaviour when updating an entity. Should be annotated with `@Service`.
-          * your_functionality_mapper
-            
-            This class implements `EntityDtoConverter<your_entity, your_dto>` and is used to keep the entity internal and to only expose the dto to the api. Should be annotated with `@Service`.
-          * your_functionality_repository
-            
-            This is a simple JPA Repository with your_entity as the generic type. Should be annotated with `@Repository`.
-          * your_functionality_service
-            
-            This class implements the your_functionality_service_api interface and holds the business logic of your applications custom functionality. Should be annotated with `@Service`.
+This project has a package by feature architecture. By organizing code by feature, we define clear boundaries between different parts of the system. While also following Dependency Inversion Principles (DIP) and using either interfaces or abstract classes to define contracts between features we reduce direct dependencies on concrete implementations and promoting loose coupling. Features tend to be cohesive units of functionality. By organizing code around features, we're more likely to have modules that are focused on a single responsibility which reduces the likelihood of other parts of the system depending directly on internal details of a different feature.
+
+We promote the use of `api` and `internal` packages for each feature. Wherein `api` packages contain interfaces or abstract classes of a feature defining a contract it needs to fulfill. Subsequently leading to reduced coupling and improved modularity.
+
+By having an `api` package that contains interfaces or abstract classes defining the contract for a feature, you establish a clear boundary between the external interface of the feature and its internal implementation details. This allows other parts of the system to interact with the feature through its public interface without needing to know about its internal implementation. As a result, changes to the internal implementation of a feature are less likely to have cascading effects on other parts of the system, reducing coupling and making the system more maintainable.
+
+The `internal` package, on the other hand, contains the concrete implementations and internal details of the feature. This separation of concerns ensures that implementation details are hidden from external dependencies, promoting encapsulation and reducing the risk of exposing unnecessary details or creating tight coupling between components.
+
+![structure](https://github.com/solely-flerken/SpringBase/assets/154287017/f0a15641-9dc0-484a-9c59-18e121b4ddf2)
+
+> [!NOTE]
+> `BaseCRUDController`, `EntityDtoConverter` and `EntityDtoEditor` are defined contracts which need an implementation for each feature.
+
+## Usage
+A simple application feature with CRUD functionality can be created in few steps.
+
+For each of your features:
+* Create the feature entity and data transfer object (DTO)
+> [!IMPORTANT]
+> Both entity and dto need to extends their base class either `BaseEntity` or `BaseDto`
+* Implement `BaseCRUDController`, `EntityDtoConverter`, `EntityDtoEditor` and a `JPARepository` with the respectives types of the entity and dto
+> [!TIP]
+> To use Spring Boots build in dependency injection we've to annotate implementations of `BaseCRUDController`, `EntityDtoConverter` and `EntityDtoEditor` with `@Service`
+
+To create other functionalities besides CRUD operations while following our structure we start by defining a contract for the controller of the desired feature. We then also implement this contract in our implementation of the `BaseCRUDController`. From there on we follow the basic Spring Boot workflow for creating controllers. We can use the implementation of `EntityDtoConverter` and `EntityDtoEditor` for the custom controller functionality.
+
+## Future work
+[ ] Export as library
+[ ] Extend functionality
